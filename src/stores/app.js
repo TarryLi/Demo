@@ -1,4 +1,5 @@
 /* eslint-disable prefer-rest-params */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 import _ from 'lodash';
 import { decorators, utils } from '@/common';

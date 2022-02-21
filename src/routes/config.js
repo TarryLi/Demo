@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 export default [
   {
@@ -29,5 +30,40 @@ export default [
     path: '/timeInterval',
     name: '计时器误差',
     component: () => import('@/pages/timeInterval')
+  },
+  {
+    path: '/reg',
+    name: '正则',
+    component: () => import('@/pages/reg')
+  },
+  {
+    path: '/curry',
+    name: '柯里化',
+    component: () => import('@/pages/curry')
+  },
+  {
+    path: '/monaco',
+    name: 'monaco编辑器',
+    component: () => import('@/pages/monaco')
+  },
+  {
+    path: '/codeRun',
+    name: 'codeRun',
+    component: () => import('@/pages/codeRun')
+  },
+  {
+    path: '/someTest',
+    name: 'someTest',
+    component: () => import('@/pages/someTest')
+  },
+  {
+    path: '/typeScript',
+    name: 'typeScript',
+    component: () => import('@/pages/typeScript')
+  },
+  {
+    path: '/groundGlass',
+    name: '毛玻璃',
+    component: () => import('@/pages/groundGlass')
   }
 ];

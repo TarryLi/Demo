@@ -4,14 +4,23 @@ module.exports = {
     node: true,
     es6: true
   },
-  parser: 'babel-eslint',
-  extends: 'airbnb',
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
+  },
+  extends: [
+    'airbnb-typescript',
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+  ],
   globals: {
     CST: true,
     req: true
   },
   plugins: [
-    'react-hooks'
+    'react-hooks',
+    '@typescript-eslint'
   ],
   rules: {
     'arrow-parens': 0,
@@ -47,7 +56,7 @@ module.exports = {
     'jsx-a11y/no-noninteractive-tabindex': 0,
     'jsx-a11y/no-static-element-interactions': 0,
     'react/jsx-closing-tag-location': 0,
-    'react/jsx-filename-extension': [1, { extensions: ['.js'] }],
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'react/jsx-props-no-spreading': 0,
     'react/jsx-wrap-multilines': 0,
     'react/no-array-index-key': 0,
@@ -57,6 +66,14 @@ module.exports = {
     'react/prop-types': 0,
     'react/self-closing-comp': 0,
     'jsx-a11y/media-has-caption': 0,
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
+    'import/no-extraneous-dependencies': 0,
+    'import/extensions': 0,
+    'max-len': 0,
+    'react/jsx-filename-extension': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 0,
+    '@typescript-eslint/comma-dangle': 0,
+    '@typescript-eslint/naming-convention': 0,
+    '@typescript-eslint/no-unused-expressions': 0,
+    '@typescript-eslint/default-param-last': 0,
   }
 };

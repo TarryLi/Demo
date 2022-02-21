@@ -1,4 +1,3 @@
-/* eslint-disable import/no-mutable-exports */
 import cookie from 'js-cookie';
 import WebStorageCache from 'web-storage-cache';
 import { isFunction } from 'lodash';
