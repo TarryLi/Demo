@@ -65,5 +65,15 @@ export default [
     path: '/groundGlass',
     name: '毛玻璃',
     component: () => import('@/pages/groundGlass')
+  },
+  {
+    path: '/history',
+    name: '路由',
+    component: () => import('@/pages/history')
+  },
+  {
+    path: '/webworker',
+    name: 'webworker',
+    component: () => import('@/pages/webworker')
   }
 ];

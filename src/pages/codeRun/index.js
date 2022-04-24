@@ -2,9 +2,10 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
+// import * as monaco from 'monaco-editor/esm/vs/editor/editor.main.js';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
-import 'monaco-editor/esm/vs/basic-languages/html/html.contribution';
+import 'monaco-editor/esm/vs/editor/contrib/find/findController';
+import 'monaco-editor/esm/vs/basic-languages/monaco.contribution';
 import Preview from './Preview';
 import style from './index.module.less';
 
