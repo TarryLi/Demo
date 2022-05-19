@@ -1,0 +1,145 @@
+.wrap {
+  .one {
+    :global {
+
+      .left,
+      .right,
+      .main {
+        height: 200px;
+      }
+
+      .left {
+        float: left;
+        width: 200px;
+        background-color: pink;
+      }
+
+      .right {
+        float: right;
+        width: 200px;
+        background-color: purple;
+      }
+
+      .main {
+        background-color: red;
+        margin-left: 200px;
+        margin-right: 200px;
+      }
+    }
+  }
+
+  .two {
+    margin-top: 10px;
+    display: flex;
+
+    :global {
+
+      .left,
+      .right,
+      .main {
+        height: 200px;
+      }
+
+      .left {
+        flex: 0 0 200px;
+        background-color: pink;
+      }
+
+      .right {
+        flex: 0 0 200px;
+        background-color: purple;
+      }
+
+      .main {
+        flex: 1;
+        background-color: red;
+      }
+    }
+  }
+
+  .three {
+    &::after {
+      content: '.';
+      height: 0;
+      display: block;
+      visibility: hidden;
+      clear: both;
+    }
+
+    margin-top: 10px;
+    margin-right: 200px;
+    margin-left: 200px;
+
+    :global {
+
+      .left,
+      .right,
+      .main {
+        height: 200px;
+      }
+
+      .left {
+        background-color: pink;
+        float: left;
+        margin-left: -100%;
+        width: 200px;
+        position: relative;
+        left: -200px;
+      }
+
+      .right {
+        background-color: purple;
+        float: left;
+        margin-left: -200px;
+        width: 200px;
+        position: relative;
+        left: 200px;
+      }
+
+      .main {
+        background-color: red;
+        float: left;
+        width: 100%;
+      }
+    }
+  }
+
+  .four {
+    margin-top: 10px;
+
+    :global {
+
+      .left,
+      .right,
+      .main,
+      .in {
+        height: 200px;
+      }
+
+      .left {
+        background-color: pink;
+        float: left;
+        width: 200px;
+        margin-left: -100%;
+      }
+
+      .right {
+        background-color: purple;
+        float: right;
+        width: 200px;
+        margin-left: -200px;
+      }
+
+      .main {
+        background-color: red;
+        float: left;
+        width: 100%;
+      }
+
+      .in{
+        margin-left: 200px;
+        margin-right: 200px;
+      }
+    }
+  }
+}

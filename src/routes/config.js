@@ -75,5 +75,35 @@ export default [
     path: '/webworker',
     name: 'webworker',
     component: () => import('@/pages/webworker')
+  },
+  {
+    path: '/text-overflow',
+    name: '超出截断',
+    component: () => import('@/pages/text-overflow')
+  },
+  {
+    path: '/proportion',
+    name: '元素宽高比',
+    component: () => import('@/pages/proportion')
+  },
+  {
+    path: '/flex',
+    name: 'Flex',
+    component: () => import('@/pages/flex')
+  },
+  {
+    path: '/codingMan',
+    name: 'codingMan',
+    component: () => import('@/pages/codingMan')
+  },
+  {
+    path: '/three',
+    name: '三栏布局',
+    component: () => import('@/pages/three')
+  },
+  {
+    path: '/ant-x6',
+    name: 'ant-x6',
+    component: () => import('@/pages/ant-x6')
   }
 ];

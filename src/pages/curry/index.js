@@ -28,13 +28,21 @@ function curry(fn, len = fn.length) {
   return _curry.call(this, fn, len);
 }
 
+function myCurry(fn) {
+  const judge = (...args) => args.length === fn.length ? fn(...args) : (..._args) => judge(...args, ..._args);
+  return judge;
+}
+
 export default () => {
   const func = (a, b, c, d, e) => [a, b, c, d, e];
 
   const _fn = curry(func);
 
+  const _fn1 = myCurry(func);
+
   return <div className={style.wrap}>
     {_fn(1, 2, 3, 4, 5)}
     {_fn(1)(2)(3, 4, 5)}
+    {_fn1(1)(2)(3, 4, 5)}
   </div>;
 };

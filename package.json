@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.6.4",
+    "@antv/x6": "^1.32.1",
     "@babel/core": "7.12.3",
     "@babel/standalone": "^7.16.11",
     "@loadable/component": "^5.10.3",
