@@ -354,43 +354,6 @@ module.exports = function (webpackEnv) {
               }),
             },
             {
-              test: sassRegex,
-              exclude: sassModuleRegex,
-              use: getStyleLoaders(
-                {
-                  importLoaders: 3,
-                  sourceMap: isEnvProduction
-                    ? shouldUseSourceMap
-                    : isEnvDevelopment,
-                },
-                [
-                  {
-                    loader: 'sass-loader'
-                  }
-                ]
-              ),
-              sideEffects: true,
-            },
-            {
-              test: sassModuleRegex,
-              use: getStyleLoaders(
-                {
-                  importLoaders: 3,
-                  sourceMap: isEnvProduction
-                    ? shouldUseSourceMap
-                    : isEnvDevelopment,
-                  modules: {
-                    getLocalIdent: getCSSModuleLocalIdent,
-                  },
-                },
-                [
-                  {
-                    loader: 'sass-loader'
-                  }
-                ]
-              ),
-            },
-            {
               test: lessRegex,
               exclude: lessModuleRegex,
               use: getStyleLoaders(
@@ -477,7 +440,7 @@ module.exports = function (webpackEnv) {
           {},
           {
             inject: true,
-            template: paths.appHtml,
+            template: paths.appHtml
           },
           isEnvProduction
             ? {

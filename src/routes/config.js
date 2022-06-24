@@ -105,5 +105,10 @@ export default [
     path: '/ant-x6',
     name: 'ant-x6',
     component: () => import('@/pages/ant-x6')
+  },
+  {
+    path: '/ref',
+    name: 'ref',
+    component: () => import('@/pages/ref')
   }
 ];
