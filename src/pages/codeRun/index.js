@@ -11,7 +11,7 @@ import style from './index.module.less';
 
 function getDefaultState() {
   return {
-    htmlCode: null
+    jsContent: null
   };
 }
 
@@ -22,8 +22,8 @@ export default () => {
   const [state, setState] = useSetState(getDefaultState());
 
   const onBlur = (val) => {
-    setState({ htmlCode: val });
-    preRef.current.run();
+    setState({ jsContent: val });
+    preRef.current.run(val);
   };
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default () => {
     });
     // 监听编辑事件
     editor.onDidChangeModelContent(() => {
-      setState({ htmlCode: editor.getValue() });
+      setState({ jsContent: editor.getValue() });
     });
     // 监听失焦事件
     editor.onDidBlurEditorText(() => {

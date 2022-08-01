@@ -1,0 +1,64 @@
+.wrap {
+  :global {
+    .one {
+      background: #19CAAD;
+    }
+
+    .two {
+      background: #8CC7B5;
+    }
+
+    .three {
+      background: #D1BA74;
+    }
+
+    .four {
+      background: #BEE7E9;
+    }
+
+    .five {
+      background: #E6CEAC;
+    }
+
+    .six {
+      grid-column-start: span 2;
+      background: #ECAD9E;
+    }
+
+    .seven {
+      background: #BEEDC7;
+    }
+
+    .eight {
+      background: #F4606C;
+    }
+
+    .nine {
+      background: #A0EEE1;
+    }
+
+    .item {
+      text-align: center;
+      font-size: 200%;
+      color: #fff;
+    }
+  }
+
+  .wrap1 {
+    display: grid;
+    grid-template-columns: 200px 200px 300px;
+    grid-template-rows: 100px 200px;
+    grid-row-gap: 10px;
+    grid-column-gap: 20px;
+    justify-items: start;
+  }
+
+  .wrap2{
+    display: grid;
+    grid-template-columns: 200px 200px 300px;
+    grid-template-rows: 100px 200px;
+    grid-row-gap: 10px;
+    grid-column-gap: 20px;
+    grid-auto-flow: row dense;
+  }
+}

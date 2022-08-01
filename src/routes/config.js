@@ -110,5 +110,30 @@ export default [
     path: '/ref',
     name: 'ref',
     component: () => import('@/pages/ref')
+  },
+  {
+    path: '/async-await',
+    name: 'async-await',
+    component: () => import('@/pages/async-await')
+  },
+  {
+    path: '/promise',
+    name: 'promise',
+    component: () => import('@/pages/promise')
+  },
+  {
+    path: '/grid',
+    name: 'grid',
+    component: () => import('@/pages/grid')
+  },
+  {
+    path: '/class',
+    name: 'class',
+    component: () => import('@/pages/class')
+  },
+  {
+    path: '/hooks',
+    name: 'hooks',
+    component: () => import('@/pages/hooks')
   }
 ];
