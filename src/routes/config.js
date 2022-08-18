@@ -135,5 +135,20 @@ export default [
     path: '/hooks',
     name: 'hooks',
     component: () => import('@/pages/hooks')
+  },
+  {
+    path: '/refrash',
+    name: 'refrash',
+    component: () => import('@/pages/refrash')
+  },
+  {
+    path: '/gis',
+    name: 'gis',
+    component: () => import('@/pages/gis')
+  },
+  {
+    path: '/redux',
+    name: 'redux',
+    component: () => import('@/pages/redux')
   }
 ];

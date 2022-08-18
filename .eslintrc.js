@@ -75,5 +75,6 @@ module.exports = {
     '@typescript-eslint/naming-convention': 0,
     '@typescript-eslint/no-unused-expressions': 0,
     '@typescript-eslint/default-param-last': 0,
+    'no-console': 0,
   }
 };
