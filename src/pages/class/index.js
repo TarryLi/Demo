@@ -22,6 +22,7 @@ class Child extends Father {
 
   say() {
     console.log(this.word);
+    console.log(this.food);
   }
 }
 

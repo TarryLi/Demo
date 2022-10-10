@@ -5081,6 +5081,11 @@ esrecurse@^4.1.0, esrecurse@^4.3.0:
   dependencies:
     estraverse "^5.2.0"
 
+esri-loader@^3.5.0:
+  version "3.5.0"
+  resolved "http://registry.m.jd.com/esri-loader/download/esri-loader-3.5.0.tgz#f536cbaaf676d54f6b05a706e51ececd9303ce05"
+  integrity sha1-9TbLqvZ21U9rBacG5R7OzZMDzgU=
+
 estraverse@^4.1.1, estraverse@^4.2.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-4.3.0.tgz#398ad3f3c5a24948be7725e83d11a7de28cdbd1d"
@@ -7525,6 +7530,11 @@ last-call-webpack-plugin@^3.0.0:
   dependencies:
     lodash "^4.17.5"
     webpack-sources "^1.1.0"
+
+leaflet@^1.8.0:
+  version "1.8.0"
+  resolved "http://registry.m.jd.com/leaflet/download/leaflet-1.8.0.tgz#4615db4a22a304e8e692cae9270b983b38a2055e"
+  integrity sha1-RhXbSiKjBOjmksrpJwuYOziiBV4=
 
 less-loader@^5.0.0:
   version "5.0.0"

@@ -34,14 +34,32 @@ export default () => {
 
     // console.log(promise);
 
-    const promise1 = MyPromise.resolve(3);
-    const promise2 = 42;
-    const promise3 = new MyPromise((resolve) => {
-      setTimeout(() => resolve('foo'), 3000);
+    // const promise1 = MyPromise.resolve(3);
+    // const promise2 = 42;
+    // const promise3 = new MyPromise((resolve) => {
+    //   setTimeout(() => resolve('foo'), 3000);
+    // });
+
+    // MyPromise.all([promise1, promise2, promise3]).then((values) => {
+    //   console.log(values);
+    // });
+  }, []);
+
+  useEffect(() => {
+    const p = new Promise((resolve, reject) => {
+      // resolve(1);
+      reject(2);
     });
 
-    MyPromise.all([promise1, promise2, promise3]).then((values) => {
-      console.log(values);
+    p.then((r) => {
+      console.log('a', r);
+    }, (e) => {
+      console.log('b', e);
+      throw new Error();
+    }).then((r) => {
+      console.log('c', r);
+    }).catch((e) => {
+      console.log('d', e);
     });
   }, []);
 

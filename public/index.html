@@ -4,14 +4,18 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <title>Demo</title>
-    <link rel="stylesheet" href="%PUBLIC_URL%/libs/Cesium/build/Cesium/Widgets/widgets.css">
+    <!-- <link rel="stylesheet" href="%PUBLIC_URL%/libs/Cesium/build/Cesium/Widgets/widgets.css">
     <script type="text/javascript">
       window.CESIUM_BASE_URL = '%PUBLIC_URL%/libs/Cesium/build/Cesium'
     </script>
-    <script src="%PUBLIC_URL%/libs/Cesium/build/Cesium/Cesium.js"></script>
+    <script src="%PUBLIC_URL%/libs/Cesium/build/Cesium/Cesium.js"></script> -->
+    <link rel="stylesheet" href="%PUBLIC_URL%/libs/arcgis/esri/themes/light/main.css">
+    <script src="%PUBLIC_URL%/libs/arcgis/@arcgis/core/Map.js"></script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+
+    <script type="module" crossorigin src="%PUBLIC_URL%/libs/sdk/vue_sdk.js"></script>
   </body>
 </html>

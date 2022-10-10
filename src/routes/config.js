@@ -150,5 +150,30 @@ export default [
     path: '/redux',
     name: 'redux',
     component: () => import('@/pages/redux')
+  },
+  {
+    path: '/arcgis',
+    name: 'arcgis',
+    component: () => import('@/pages/arcgis')
+  },
+  {
+    path: '/nav',
+    name: 'nav',
+    component: () => import('@/pages/nav')
+  },
+  {
+    path: '/iframe',
+    name: 'iframe',
+    component: () => import('@/pages/iframe')
+  },
+  {
+    path: '/vueSdk',
+    name: 'vueSdk',
+    component: () => import('@/pages/vueSdk')
+  },
+  {
+    path: '/leaflet',
+    name: 'leaflet',
+    component: () => import('@/pages/leaflet')
   }
 ];
