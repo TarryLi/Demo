@@ -175,5 +175,15 @@ export default [
     path: '/leaflet',
     name: 'leaflet',
     component: () => import('@/pages/leaflet')
+  },
+  {
+    path: '/bable',
+    name: 'bable',
+    component: () => import('@/pages/bable')
+  },
+  {
+    path: '/particleAnimation',
+    name: '粒子动画',
+    component: () => import('@/pages/particleAnimation')
   }
 ];
