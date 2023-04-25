@@ -2,6 +2,21 @@
 /* eslint-disable no-unused-vars */
 export default [
   {
+    path: '/promiseRace',
+    name: 'promiseRace【多异步任务，控制并发】',
+    component: () => import('@/pages/promiseRace')
+  },
+  {
+    path: '/scheduler',
+    name: 'scheduler【小而多任务切片】',
+    component: () => import('@/pages/scheduler')
+  },
+  {
+    path: '/gpt',
+    name: 'chatGpt',
+    component: () => import('@/pages/gpt')
+  },
+  {
     path: '/canvars',
     name: 'canvars基础',
     component: () => import('@/pages/canvars')
@@ -18,7 +33,7 @@ export default [
   },
   {
     path: '/RAF',
-    name: 'requestAnimationFrame',
+    name: 'requestAnimationFrame【帧回调】',
     component: () => import('@/pages/RAF')
   },
   {
@@ -73,7 +88,7 @@ export default [
   },
   {
     path: '/webworker',
-    name: 'webworker',
+    name: 'webworker【多线程】',
     component: () => import('@/pages/webworker')
   },
   {
@@ -118,7 +133,7 @@ export default [
   },
   {
     path: '/promise',
-    name: 'promise',
+    name: 'promise【手写】',
     component: () => import('@/pages/promise')
   },
   {
@@ -185,5 +200,15 @@ export default [
     path: '/particleAnimation',
     name: '粒子动画',
     component: () => import('@/pages/particleAnimation')
+  },
+  {
+    path: '/pubsub',
+    name: '发布订阅',
+    component: () => import('@/pages/pubsub')
+  },
+  {
+    path: '/decorator',
+    name: '装饰器',
+    component: () => import('@/pages/decorator')
   }
 ];
