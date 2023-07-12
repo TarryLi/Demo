@@ -2,7 +2,10 @@ import BoundingSphere from "../../Core/BoundingSphere.js";
 import Cartesian3 from "../../Core/Cartesian3.js";
 import Check from "../../Core/Check.js";
 import clone from "../../Core/clone.js";
+import combine from "../../Core/combine.js";
 import defined from "../../Core/defined.js";
+import BlendingState from "../BlendingState.js";
+import DepthFunction from "../DepthFunction.js";
 import ModelExperimentalUtility from "./ModelExperimentalUtility.js";
 import ModelLightingOptions from "./ModelLightingOptions.js";
 
@@ -11,7 +14,7 @@ import ModelLightingOptions from "./ModelLightingOptions.js";
  * at the primitive level. Again, properties are inherited from the parent.
  *
  * @param {NodeRenderResources} nodeRenderResources The node resources to inherit from
- * @param {ModelExperimentalRuntimePrimitive} runtimePrimitive The primitive.
+ * @param {ModelExperimentalPrimitive} runtimePrimitive The primitive.
  *
  * @private
  */
@@ -37,7 +40,7 @@ export default function PrimitiveRenderResources(
   /**
    * A reference to the runtime node. Inherited from the node render resources.
    *
-   * @type {ModelExperimentalRuntimeNode}
+   * @type {ModelExperimentalNode}
    * @readonly
    *
    * @private
@@ -77,7 +80,7 @@ export default function PrimitiveRenderResources(
 
   /**
    * Whether or not this primitive has a property table for storing metadata.
-   * When present, picking and styling can use this.
+   * When present, picking and styling can use this
    *
    * @type {Boolean}
    * @default false
@@ -99,7 +102,7 @@ export default function PrimitiveRenderResources(
   this.uniformMap = clone(nodeRenderResources.uniformMap);
 
   /**
-   * Options for configuring the alpha stage such as pass and alpha cutoff. Inherited from the node
+   * Options for configuring the alpha stage such as pass and alpha mode. Inherited from the node
    * render resources.
    *
    * @type {ModelAlphaOptions}
@@ -131,9 +134,9 @@ export default function PrimitiveRenderResources(
   this.instanceCount = nodeRenderResources.instanceCount;
 
   /**
-   * A reference to the runtime primitive.
+   * A reference to the runtime primitive
    *
-   * @type {ModelExperimentalRuntimePrimitive}
+   * @type {ModelExperimentalPrimitive}
    * @readonly
    *
    * @private
@@ -166,7 +169,7 @@ export default function PrimitiveRenderResources(
         .count;
 
   /**
-   * The indices for this primitive.
+   * The indices for this primitive
    *
    * @type {ModelComponents.Indices}
    * @readonly
@@ -176,7 +179,7 @@ export default function PrimitiveRenderResources(
   this.indices = primitive.indices;
 
   /**
-   * Additional index buffer for wireframe mode (if enabled).
+   * Additional index buffer for wireframe mode (if enabled)
    *
    * @type {Buffer}
    * @readonly
@@ -186,7 +189,7 @@ export default function PrimitiveRenderResources(
   this.wireframeIndexBuffer = undefined;
 
   /**
-   * The primitive type such as TRIANGLES or POINTS.
+   * The primitive type such as TRIANGLES or POINTS
    *
    * @type {PrimitiveType}
    * @readonly
@@ -266,7 +269,13 @@ export default function PrimitiveRenderResources(
    *
    * @private
    */
-  this.renderStateOptions = clone(nodeRenderResources.renderStateOptions, true);
+  this.renderStateOptions = combine(nodeRenderResources.renderStateOptions, {
+    depthTest: {
+      enabled: true,
+      func: DepthFunction.LESS_OR_EQUAL,
+    },
+    blending: BlendingState.DISABLED,
+  });
 
   /**
    * An enum describing the types of draw commands needed, based on the style.

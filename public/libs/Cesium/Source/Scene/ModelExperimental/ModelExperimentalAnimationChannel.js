@@ -21,7 +21,7 @@ const AnimatedPropertyType = ModelComponents.AnimatedPropertyType;
  * @param {Object} options An object containing the following options:
  * @param {ModelComponents.AnimationChannel} options.channel The corresponding animation channel components from the 3D model.
  * @param {ModelExperimentalAnimation} options.runtimeAnimation The runtime animation containing this channel.
- * @param {ModelExperimentalRuntimeNode} options.runtimeNode The runtime node that this channel will animate.
+ * @param {ModelExperimentalNode} options.runtimeNode The runtime node that this channel will animate.
  *
  * @alias ModelExperimentalAnimationChannel
  * @constructor
@@ -90,7 +90,7 @@ Object.defineProperties(ModelExperimentalAnimationChannel.prototype, {
    *
    * @memberof ModelExperimentalAnimationChannel.prototype
    *
-   * @type {ModelExperimentalRuntimeNode}
+   * @type {ModelExperimentalNode}
    * @readonly
    *
    * @private
@@ -262,12 +262,11 @@ ModelExperimentalAnimationChannel.prototype.animate = function (time) {
   const splines = this._splines;
   const path = this._path;
   const model = this._runtimeAnimation.model;
-  const runtimeNode = this._runtimeNode;
 
   // Weights are handled differently than the other properties because
   // they need to be updated in place.
   if (path === AnimatedPropertyType.WEIGHTS) {
-    const morphWeights = runtimeNode.morphWeights;
+    const morphWeights = this._runtimeNode.morphWeights;
     const length = morphWeights.length;
     for (let i = 0; i < length; i++) {
       const spline = splines[i];
@@ -276,9 +275,6 @@ ModelExperimentalAnimationChannel.prototype.animate = function (time) {
         : spline.wrapTime(time);
       morphWeights[i] = spline.evaluate(localAnimationTime);
     }
-  } else if (runtimeNode.userAnimated) {
-    // If the node is being animated externally, ignore the glTF animation.
-    return;
   } else {
     const spline = splines[0];
     const localAnimationTime = model.clampAnimations
@@ -286,7 +282,10 @@ ModelExperimentalAnimationChannel.prototype.animate = function (time) {
       : spline.wrapTime(time);
 
     // This sets the translate, rotate, and scale properties.
-    runtimeNode[path] = spline.evaluate(localAnimationTime, scratchVariable);
+    this._runtimeNode[path] = spline.evaluate(
+      localAnimationTime,
+      scratchVariable
+    );
   }
 };
 

@@ -15,7 +15,15 @@ export default function ModelAlphaOptions() {
    */
   this.pass = undefined;
   /**
-   * Determines the alpha threshold below which fragments are discarded
+   * Which method to use for handling the alpha channel in the fragment shader.
+   *
+   * @type {AlphaMode}
+   * @private
+   */
+  this.alphaMode = undefined;
+  /**
+   * When the alpha mode is MASK, this determines the alpha threshold
+   * below which fragments are discarded
    *
    * @type {Number}
    * @private

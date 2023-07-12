@@ -104,20 +104,28 @@ MaterialPipelineStage.process = function (
   // Configure back-face culling
   const model = renderResources.model;
   const cull = model.backFaceCulling && !material.doubleSided;
-  renderResources.renderStateOptions.cull.enabled = cull;
+  const translucent = defined(model.color) && model.color.alpha < 1.0;
+  renderResources.renderStateOptions.cull = {
+    enabled: cull && !translucent,
+  };
 
   const alphaOptions = renderResources.alphaOptions;
-  if (material.alphaMode === AlphaMode.BLEND) {
-    alphaOptions.pass = Pass.TRANSLUCENT;
-  } else if (material.alphaMode === AlphaMode.MASK) {
-    alphaOptions.alphaCutoff = material.alphaCutoff;
+  if (!defined(alphaOptions.alphaMode)) {
+    alphaOptions.alphaMode = material.alphaMode;
+    if (material.alphaMode === AlphaMode.BLEND) {
+      alphaOptions.pass = Pass.TRANSLUCENT;
+    } else if (material.alphaMode === AlphaMode.MASK) {
+      alphaOptions.alphaCutoff = material.alphaCutoff;
+    }
   }
 
   shaderBuilder.addFragmentLines([MaterialStageFS]);
 
-  if (material.doubleSided) {
+  // Check if the model's debug wireframe is enabled. If so, add a define
+  // to disable normal mapping.
+  if (model.debugWireframe) {
     shaderBuilder.addDefine(
-      "HAS_DOUBLE_SIDED_MATERIAL",
+      "USE_WIREFRAME",
       undefined,
       ShaderDestination.FRAGMENT
     );

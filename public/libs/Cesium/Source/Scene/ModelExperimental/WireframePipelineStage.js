@@ -2,11 +2,10 @@ import Buffer from "../../Renderer/Buffer.js";
 import BufferUsage from "../../Renderer/BufferUsage.js";
 import defined from "../../Core/defined.js";
 import IndexDatatype from "../../Core/IndexDatatype.js";
-import ModelExperimentalUtility from "./ModelExperimentalUtility.js";
 import PrimitiveType from "../../Core/PrimitiveType.js";
-import ShaderDestination from "../../Renderer/ShaderDestination.js";
-import VertexAttributeSemantic from "../VertexAttributeSemantic.js";
 import WireframeIndexGenerator from "../../Core/WireframeIndexGenerator.js";
+import VertexAttributeSemantic from "../VertexAttributeSemantic.js";
+import ModelExperimentalUtility from "./ModelExperimentalUtility.js";
 
 /**
  * The wireframe pipeline stage generates a new index buffer for rendering the
@@ -21,7 +20,6 @@ WireframePipelineStage.name = "WireframePipelineStage"; // Helps with debugging
 /**
  * Process a primitive. This modifies the render resources as follows:
  * <ul>
- *   <li>Adds a define to the fragment shader to prevent extra shading of the lines.</li>
  *   <li>Adds a separate index buffer for wireframe indices</li>
  *   <li>Updates the primitive type and count for rendering with gl.LINES</li>
  * </ul>
@@ -35,16 +33,6 @@ WireframePipelineStage.process = function (
   primitive,
   frameState
 ) {
-  // Applying normal mapping to the lines will result in rendering
-  // errors on Linux. This define is added to disable normal
-  // mapping in the shader.
-  const shaderBuilder = renderResources.shaderBuilder;
-  shaderBuilder.addDefine(
-    "HAS_WIREFRAME",
-    undefined,
-    ShaderDestination.FRAGMENT
-  );
-
   const model = renderResources.model;
   const wireframeIndexBuffer = createWireframeIndexBuffer(
     primitive,

@@ -24,9 +24,12 @@ vec4 handleAlpha(vec3 color, float alpha)\n\
     if (alpha < u_alphaCutoff) {\n\
         discard;\n\
     }\n\
-    #endif\n\
-\n\
+    return vec4(color, 1.0);\n\
+    #elif defined(ALPHA_MODE_BLEND)\n\
     return vec4(color, alpha);\n\
+    #else // OPAQUE\n\
+    return vec4(color, 1.0);\n\
+    #endif\n\
 }\n\
 \n\
 SelectedFeature selectedFeature;\n\
@@ -46,8 +49,7 @@ void main()\n\
     featureIdStage(featureIds, attributes);\n\
 \n\
     Metadata metadata;\n\
-    MetadataClass metadataClass;\n\
-    metadataStage(metadata, metadataClass, attributes);\n\
+    metadataStage(metadata, attributes);\n\
 \n\
     #ifdef HAS_SELECTED_FEATURE_ID\n\
     selectedFeatureIdStage(selectedFeature, featureIds);\n\
@@ -58,7 +60,7 @@ void main()\n\
     #endif\n\
 \n\
     #ifdef HAS_CUSTOM_FRAGMENT_SHADER\n\
-    customShaderStage(material, attributes, featureIds, metadata, metadataClass);\n\
+    customShaderStage(material, attributes, featureIds, metadata);\n\
     #endif\n\
 \n\
     lightingStage(material, attributes);\n\
@@ -69,10 +71,6 @@ void main()\n\
 \n\
     #ifdef HAS_MODEL_COLOR\n\
     modelColorStage(material);\n\
-    #endif\n\
-\n\
-    #ifdef HAS_PRIMITIVE_OUTLINE\n\
-    primitiveOutlineStage(material);\n\
     #endif\n\
 \n\
     vec4 color = handleAlpha(material.diffuse, material.alpha);\n\

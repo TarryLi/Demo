@@ -948,7 +948,7 @@ ImageryLayer.prototype._requestImagery = function (imagery) {
     imagery.state = ImageryState.RECEIVED;
     imagery.request = undefined;
 
-    TileProviderError.reportSuccess(that._requestImageError);
+    TileProviderError.handleSuccess(that._requestImageError);
   }
 
   function failure(e) {
@@ -965,7 +965,7 @@ ImageryLayer.prototype._requestImagery = function (imagery) {
     imagery.request = undefined;
 
     const message = `Failed to obtain image tile X: ${imagery.x} Y: ${imagery.y} Level: ${imagery.level}.`;
-    that._requestImageError = TileProviderError.reportError(
+    that._requestImageError = TileProviderError.handleError(
       that._requestImageError,
       imageryProvider,
       imageryProvider.errorEvent,
@@ -973,11 +973,9 @@ ImageryLayer.prototype._requestImagery = function (imagery) {
       imagery.x,
       imagery.y,
       imagery.level,
+      doRequest,
       e
     );
-    if (that._requestImageError.retry) {
-      doRequest();
-    }
   }
 
   function doRequest() {

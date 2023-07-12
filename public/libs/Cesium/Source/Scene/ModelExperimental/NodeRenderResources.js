@@ -10,7 +10,7 @@ import clone from "../../Core/clone.js";
  * @constructor
  *
  * @param {ModelRenderResources} modelRenderResources The model resources to inherit
- * @param {ModelExperimentalRuntimeNode} runtimeNode The in-memory representation of the scene graph node.
+ * @param {ModelExperimentalNode} runtimeNode The in-memory representation of the scene graph node.
  *
  * @private
  */
@@ -54,7 +54,7 @@ export default function NodeRenderResources(modelRenderResources, runtimeNode) {
   this.uniformMap = clone(modelRenderResources.uniformMap);
 
   /**
-   * Options for configuring the alpha stage such as pass and alpha cutoff. Inherited from the model
+   * Options for configuring the alpha stage such as pass and alpha mode. Inherited from the model
    * render resources.
    *
    * @type {ModelAlphaOptions}
@@ -75,16 +75,13 @@ export default function NodeRenderResources(modelRenderResources, runtimeNode) {
    *
    * @private
    */
-  this.renderStateOptions = clone(
-    modelRenderResources.renderStateOptions,
-    true
-  );
+  this.renderStateOptions = clone(modelRenderResources.renderStateOptions);
 
   // Other properties.
   /**
    * A reference to the runtime node
    *
-   * @type {ModelExperimentalRuntimeNode}
+   * @type {ModelExperimentalNode}
    * @readonly
    *
    * @private

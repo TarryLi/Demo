@@ -384,11 +384,7 @@ function loadFromDraco(vertexBufferLoader) {
     }
 
     // Now wait for process() to run to finish loading
-    vertexBufferLoader._typedArray = new Uint8Array(
-      typedArray.buffer,
-      typedArray.byteOffset,
-      typedArray.byteLength
-    );
+    vertexBufferLoader._typedArray = typedArray;
     vertexBufferLoader._state = ResourceLoaderState.PROCESSING;
     return vertexBufferLoader;
   });

@@ -16,7 +16,7 @@ import StencilConstants from "../StencilConstants.js";
 import VertexArray from "../../Renderer/VertexArray.js";
 
 /**
- * Builds the {@link ModelExperimentalDrawCommand} for a {@link ModelExperimentalRuntimePrimitive}
+ * Builds the {@link ModelExperimentalDrawCommand} for a {@link ModelExperimentalPrimitive}
  * using its render resources.
  *
  * @param {PrimitiveRenderResources} primitiveRenderResources The render resources for a primitive.
@@ -34,7 +34,7 @@ export default function buildDrawCommand(primitiveRenderResources, frameState) {
   const model = primitiveRenderResources.model;
   const context = frameState.context;
 
-  const indexBuffer = getIndexBuffer(primitiveRenderResources);
+  const indexBuffer = getIndexBuffer(primitiveRenderResources, frameState);
 
   const vertexArray = new VertexArray({
     context: context,
@@ -122,7 +122,7 @@ export default function buildDrawCommand(primitiveRenderResources, frameState) {
 /**
  * @private
  */
-function getIndexBuffer(primitiveRenderResources) {
+function getIndexBuffer(primitiveRenderResources, frameState) {
   const wireframeIndexBuffer = primitiveRenderResources.wireframeIndexBuffer;
   if (defined(wireframeIndexBuffer)) {
     return wireframeIndexBuffer;

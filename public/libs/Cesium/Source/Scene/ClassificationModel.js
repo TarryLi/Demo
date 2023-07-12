@@ -5,6 +5,7 @@ import Color from "../Core/Color.js";
 import combine from "../Core/combine.js";
 import ComponentDatatype from "../Core/ComponentDatatype.js";
 import defaultValue from "../Core/defaultValue.js";
+import defer from "../Core/defer.js";
 import defined from "../Core/defined.js";
 import destroyObject from "../Core/destroyObject.js";
 import DeveloperError from "../Core/DeveloperError.js";
@@ -153,15 +154,7 @@ function ClassificationModel(options) {
   this._modelMatrix = Matrix4.clone(this.modelMatrix);
 
   this._ready = false;
-  const classificationModel = this;
-  this._readyPromise = new Promise((resolve) => {
-    classificationModel._completeLoad = (frameState) => {
-      frameState.afterRender.push(function () {
-        classificationModel._ready = true;
-        resolve(classificationModel);
-      });
-    };
-  });
+  this._readyPromise = defer();
 
   /**
    * This property is for debugging only; it is not for production use nor is it optimized.
@@ -352,7 +345,7 @@ Object.defineProperties(ClassificationModel.prototype, {
    */
   readyPromise: {
     get: function () {
-      return this._readyPromise;
+      return this._readyPromise.promise;
     },
   },
 
@@ -1190,7 +1183,11 @@ ClassificationModel.prototype.update = function (frameState) {
 
   if (justLoaded) {
     // Called after modelMatrix update.
-    this._completeLoad(frameState);
+    const model = this;
+    frameState.afterRender.push(function () {
+      model._ready = true;
+      model._readyPromise.resolve(model);
+    });
     return;
   }
 

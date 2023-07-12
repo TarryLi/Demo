@@ -61,12 +61,9 @@ void lightingStage(inout czm_modelMaterial material, ProcessedAttributes attribu
     color = material.diffuse;\n\
     #endif\n\
 \n\
-    #ifdef HAS_POINT_CLOUD_COLOR_STYLE\n\
-    // The colors resulting from point cloud styles are adjusted differently.\n\
-    color = czm_gammaCorrect(color);\n\
-    #elif !defined(HDR)\n\
     // If HDR is not enabled, the frame buffer stores sRGB colors rather than\n\
     // linear colors so the linear value must be converted.\n\
+    #ifndef HDR\n\
     color = czm_linearToSrgb(color);\n\
     #endif\n\
 \n\

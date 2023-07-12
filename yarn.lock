@@ -3375,6 +3375,11 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
+cesium@1.95.0:
+  version "1.95.0"
+  resolved "https://registry.npmmirror.com/cesium/-/cesium-1.95.0.tgz#8a9036c58b9818406586259d3720a05f24e87a69"
+  integrity sha512-59U0lZD/wmSJa4t9FcK1/sp6PyCpx7h8c4giLd8VM7LJDL6w0G0o4QGlZ4TSJTBe4VIClf+qPDUf47wyBu4YoA==
+
 chalk@2.4.2, chalk@^2.0.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
@@ -10824,6 +10829,11 @@ reselect@^4.1.5:
   version "4.1.6"
   resolved "http://registry.m.jd.com/reselect/download/reselect-4.1.6.tgz#19ca2d3d0b35373a74dc1c98692cdaffb6602656"
   integrity sha1-GcotPQs1Nzp03ByYaSza/7ZgJlY=
+
+resium@1.14.3:
+  version "1.14.3"
+  resolved "https://registry.npmmirror.com/resium/-/resium-1.14.3.tgz#ac69b4ba1fbef89cedeaf26e2fffe7371be17185"
+  integrity sha512-JgxEMnVVrvL2sf305pgf+w+n/w2LgP/106u2WYaBQotC539y9j8SBNQCSAGBMCWCejzmhIdMBEX0BKQj5kzwqQ==
 
 resize-observer-polyfill@^1.5.0, resize-observer-polyfill@^1.5.1:
   version "1.5.1"

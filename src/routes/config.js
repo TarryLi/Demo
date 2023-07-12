@@ -2,6 +2,26 @@
 /* eslint-disable no-unused-vars */
 export default [
   {
+    path: '/cesium',
+    name: 'cesium地图',
+    component: () => import('@/pages/cesium')
+  },  
+  {
+    path: '/svg',
+    name: 'svg压缩插件',
+    component: () => import('@/pages/svg')
+  },  
+  {
+    path: '/allocation',
+    name: '分配',
+    component: () => import('@/pages/allocation')
+  },  
+  {
+    path: '/water',
+    name: '水印',
+    component: () => import('@/pages/water')
+  },
+  {
     path: '/promiseRace',
     name: 'promiseRace【多异步任务，控制并发】',
     component: () => import('@/pages/promiseRace')

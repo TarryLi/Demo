@@ -210,6 +210,7 @@ function createPositionsTypedArrayFor2D(
   referencePoint,
   frameState
 ) {
+  const typedArray = attribute.typedArray.slice();
   let result;
   if (defined(attribute.quantization)) {
     // Dequantize the positions if necessary.
@@ -218,7 +219,11 @@ function createPositionsTypedArrayFor2D(
       attribute.quantization
     );
   } else {
-    result = attribute.typedArray.slice();
+    result = new Float32Array(
+      typedArray.buffer,
+      typedArray.byteOffset,
+      typedArray.byteLength / Float32Array.BYTES_PER_ELEMENT
+    );
   }
 
   const startIndex = attribute.byteOffset / Float32Array.BYTES_PER_ELEMENT;

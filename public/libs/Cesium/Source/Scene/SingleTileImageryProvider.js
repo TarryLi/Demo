@@ -1,5 +1,6 @@
 import Credit from "../Core/Credit.js";
 import defaultValue from "../Core/defaultValue.js";
+import defer from "../Core/defer.js";
 import defined from "../Core/defined.js";
 import DeveloperError from "../Core/DeveloperError.js";
 import Event from "../Core/Event.js";
@@ -152,6 +153,7 @@ function SingleTileImageryProvider(options) {
   this._errorEvent = new Event();
 
   this._ready = false;
+  this._readyPromise = defer();
 
   let credit = options.credit;
   if (typeof credit === "string") {
@@ -167,34 +169,33 @@ function SingleTileImageryProvider(options) {
     that._tileWidth = image.width;
     that._tileHeight = image.height;
     that._ready = true;
-    TileProviderError.reportSuccess(that._errorEvent);
-    return Promise.resolve(true);
+    that._readyPromise.resolve(true);
+    TileProviderError.handleSuccess(that._errorEvent);
   }
 
   function failure(e) {
     const message = `Failed to load image ${resource.url}.`;
-    error = TileProviderError.reportError(
+    error = TileProviderError.handleError(
       error,
       that,
       that._errorEvent,
       message,
       0,
       0,
-      0
+      0,
+      doRequest,
+      e
     );
-    if (error.retry) {
-      return doRequest();
+    if (!error.retry) {
+      that._readyPromise.reject(new RuntimeError(message));
     }
-    return Promise.reject(new RuntimeError(message));
   }
 
   function doRequest() {
-    return ImageryProvider.loadImage(null, resource)
-      .then(success)
-      .catch(failure);
+    ImageryProvider.loadImage(null, resource).then(success).catch(failure);
   }
 
-  this._readyPromise = doRequest();
+  doRequest();
 }
 
 Object.defineProperties(SingleTileImageryProvider.prototype, {
@@ -397,7 +398,7 @@ Object.defineProperties(SingleTileImageryProvider.prototype, {
    */
   readyPromise: {
     get: function () {
-      return this._readyPromise;
+      return this._readyPromise.promise;
     },
   },
 

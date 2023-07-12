@@ -424,9 +424,9 @@ SvgButton.prototype.setTooltip = function (tooltip) {
  *
  * function tick() {
  *     clock.tick();
- *     requestAnimationFrame(tick);
+ *     Cesium.requestAnimationFrame(tick);
  * }
- * requestAnimationFrame(tick);
+ * Cesium.requestAnimationFrame(tick);
  *
  * @see AnimationViewModel
  * @see Clock

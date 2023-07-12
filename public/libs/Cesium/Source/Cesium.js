@@ -1,4 +1,4 @@
-export const VERSION = '1.96';
+export const VERSION = '1.95';
 export { default as ApproximateTerrainHeights } from './Core/ApproximateTerrainHeights.js';
 export { default as ArcGISTiledElevationTerrainProvider } from './Core/ArcGISTiledElevationTerrainProvider.js';
 export { default as ArcType } from './Core/ArcType.js';
@@ -634,7 +634,6 @@ export { default as PostProcessStageSampleMode } from './Scene/PostProcessStageS
 export { default as PostProcessStageTextureCache } from './Scene/PostProcessStageTextureCache.js';
 export { default as Primitive } from './Scene/Primitive.js';
 export { default as PrimitiveCollection } from './Scene/PrimitiveCollection.js';
-export { default as PrimitiveLoadPlan } from './Scene/PrimitiveLoadPlan.js';
 export { default as PrimitivePipeline } from './Scene/PrimitivePipeline.js';
 export { default as PrimitiveState } from './Scene/PrimitiveState.js';
 export { default as PropertyAttribute } from './Scene/PropertyAttribute.js';
@@ -869,8 +868,7 @@ export { default as ModelExperimentalArticulation } from './Scene/ModelExperimen
 export { default as ModelExperimentalArticulationStage } from './Scene/ModelExperimental/ModelExperimentalArticulationStage.js';
 export { default as ModelExperimentalDrawCommand } from './Scene/ModelExperimental/ModelExperimentalDrawCommand.js';
 export { default as ModelExperimentalNode } from './Scene/ModelExperimental/ModelExperimentalNode.js';
-export { default as ModelExperimentalRuntimeNode } from './Scene/ModelExperimental/ModelExperimentalRuntimeNode.js';
-export { default as ModelExperimentalRuntimePrimitive } from './Scene/ModelExperimental/ModelExperimentalRuntimePrimitive.js';
+export { default as ModelExperimentalPrimitive } from './Scene/ModelExperimental/ModelExperimentalPrimitive.js';
 export { default as ModelExperimentalSceneGraph } from './Scene/ModelExperimental/ModelExperimentalSceneGraph.js';
 export { default as ModelExperimentalSkin } from './Scene/ModelExperimental/ModelExperimentalSkin.js';
 export { default as ModelExperimentalStatistics } from './Scene/ModelExperimental/ModelExperimentalStatistics.js';
@@ -888,9 +886,7 @@ export { default as NodeRenderResources } from './Scene/ModelExperimental/NodeRe
 export { default as NodeStatisticsPipelineStage } from './Scene/ModelExperimental/NodeStatisticsPipelineStage.js';
 export { default as PickingPipelineStage } from './Scene/ModelExperimental/PickingPipelineStage.js';
 export { default as PntsLoader } from './Scene/ModelExperimental/PntsLoader.js';
-export { default as PointCloudStylingPipelineStage } from './Scene/ModelExperimental/PointCloudStylingPipelineStage.js';
-export { default as PrimitiveOutlineGenerator } from './Scene/ModelExperimental/PrimitiveOutlineGenerator.js';
-export { default as PrimitiveOutlinePipelineStage } from './Scene/ModelExperimental/PrimitiveOutlinePipelineStage.js';
+export { default as PointCloudAttenuationPipelineStage } from './Scene/ModelExperimental/PointCloudAttenuationPipelineStage.js';
 export { default as PrimitiveRenderResources } from './Scene/ModelExperimental/PrimitiveRenderResources.js';
 export { default as PrimitiveStatisticsPipelineStage } from './Scene/ModelExperimental/PrimitiveStatisticsPipelineStage.js';
 export { default as SceneMode2DPipelineStage } from './Scene/ModelExperimental/SceneMode2DPipelineStage.js';
@@ -960,9 +956,7 @@ export { default as _shadersModelSilhouetteStageFS } from './Shaders/ModelExperi
 export { default as _shadersModelSilhouetteStageVS } from './Shaders/ModelExperimental/ModelSilhouetteStageVS.js';
 export { default as _shadersModelSplitterStageFS } from './Shaders/ModelExperimental/ModelSplitterStageFS.js';
 export { default as _shadersMorphTargetsStageVS } from './Shaders/ModelExperimental/MorphTargetsStageVS.js';
-export { default as _shadersPointCloudStylingStageVS } from './Shaders/ModelExperimental/PointCloudStylingStageVS.js';
-export { default as _shadersPrimitiveOutlineStageFS } from './Shaders/ModelExperimental/PrimitiveOutlineStageFS.js';
-export { default as _shadersPrimitiveOutlineStageVS } from './Shaders/ModelExperimental/PrimitiveOutlineStageVS.js';
+export { default as _shadersPointCloudAttenuationStageVS } from './Shaders/ModelExperimental/PointCloudAttenuationStageVS.js';
 export { default as _shadersSelectedFeatureIdStageCommon } from './Shaders/ModelExperimental/SelectedFeatureIdStageCommon.js';
 export { default as _shadersSkinningStageVS } from './Shaders/ModelExperimental/SkinningStageVS.js';
 export { default as _shadersAcesTonemappingStage } from './Shaders/PostProcessStages/AcesTonemappingStage.js';

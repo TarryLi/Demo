@@ -37,11 +37,10 @@ function PropertyTextureProperty(options) {
   //>>includeEnd('debug');
 
   // in EXT_structural_metadata, the property is a valid glTF textureInfo
-  const channels = defined(property.channels) ? property.channels : [0];
   const textureInfo = property;
   const textureReader = GltfLoaderUtil.createModelTextureReader({
     textureInfo: textureInfo,
-    channels: reformatChannels(channels),
+    channels: reformatChannels(property.channels),
     texture: textures[textureInfo.index],
   });
 
@@ -132,20 +131,6 @@ Object.defineProperties(PropertyTextureProperty.prototype, {
   scale: {
     get: function () {
       return this._scale;
-    },
-  },
-
-  /**
-   * The properties inherited from this property's class
-   *
-   * @memberof PropertyTextureProperty.prototype
-   * @type {MetadataClassProperty}
-   * @readonly
-   * @private
-   */
-  classProperty: {
-    get: function () {
-      return this._classProperty;
     },
   },
 

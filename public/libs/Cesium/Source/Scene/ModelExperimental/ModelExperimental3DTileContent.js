@@ -2,9 +2,8 @@ import Color from "../../Core/Color.js";
 import combine from "../../Core/combine.js";
 import defined from "../../Core/defined.js";
 import destroyObject from "../../Core/destroyObject.js";
-import ModelAnimationLoop from "../ModelAnimationLoop.js";
-import ModelExperimental from "./ModelExperimental.js";
 import Pass from "../../Renderer/Pass.js";
+import ModelExperimental from "./ModelExperimental.js";
 
 /**
  * Represents the contents of a glTF, glb or
@@ -72,10 +71,7 @@ Object.defineProperties(ModelExperimental3DTileContent.prototype, {
 
   batchTableByteLength: {
     get: function () {
-      const statistics = this._model.statistics;
-      return (
-        statistics.propertyTablesByteLength + statistics.batchTexturesByteLength
-      );
+      return this._model.statistics.propertyTablesByteLength;
     },
   },
 
@@ -195,6 +191,7 @@ ModelExperimental3DTileContent.prototype.update = function (
   model.colorBlendMode = tileset.colorBlendMode;
   model.modelMatrix = tile.computedTransform;
   model.customShader = tileset.customShader;
+  model.pointCloudShading = tileset.pointCloudShading;
   model.featureIdLabel = tileset.featureIdLabel;
   model.instanceFeatureIdLabel = tileset.instanceFeatureIdLabel;
   model.lightColor = tileset.lightColor;
@@ -204,9 +201,6 @@ ModelExperimental3DTileContent.prototype.update = function (
   model.showCreditsOnScreen = tileset.showCreditsOnScreen;
   model.splitDirection = tileset.splitDirection;
   model.debugWireframe = tileset.debugWireframe;
-  model.showOutline = tileset.showOutline;
-  model.outlineColor = tileset.outlineColor;
-  model.pointCloudShading = tileset.pointCloudShading;
 
   // Updating clipping planes requires more effort because of ownership checks
   const tilesetClippingPlanes = tileset.clippingPlanes;
@@ -260,15 +254,7 @@ ModelExperimental3DTileContent.fromGltf = function (
     content,
     additionalOptions
   );
-
-  const model = ModelExperimental.fromGltf(modelOptions);
-  model.readyPromise.then(function (model) {
-    model.activeAnimations.addAll({
-      loop: ModelAnimationLoop.REPEAT,
-    });
-  });
-  content._model = model;
-
+  content._model = ModelExperimental.fromGltf(modelOptions);
   return content;
 };
 
@@ -293,15 +279,7 @@ ModelExperimental3DTileContent.fromB3dm = function (
     content,
     additionalOptions
   );
-
-  const model = ModelExperimental.fromB3dm(modelOptions);
-  model.readyPromise.then(function (model) {
-    model.activeAnimations.addAll({
-      loop: ModelAnimationLoop.REPEAT,
-    });
-  });
-  content._model = model;
-
+  content._model = ModelExperimental.fromB3dm(modelOptions);
   return content;
 };
 
@@ -326,15 +304,7 @@ ModelExperimental3DTileContent.fromI3dm = function (
     content,
     additionalOptions
   );
-
-  const model = ModelExperimental.fromI3dm(modelOptions);
-  model.readyPromise.then(function (model) {
-    model.activeAnimations.addAll({
-      loop: ModelAnimationLoop.REPEAT,
-    });
-  });
-  content._model = model;
-
+  content._model = ModelExperimental.fromI3dm(modelOptions);
   return content;
 };
 
@@ -397,6 +367,7 @@ function makeModelOptions(tileset, tile, content, additionalOptions) {
     incrementallyLoadTextures: false,
     customShader: tileset.customShader,
     content: content,
+    show: tileset.show,
     colorBlendMode: tileset.colorBlendMode,
     colorBlendAmount: tileset.colorBlendAmount,
     lightColor: tileset.lightColor,
@@ -412,9 +383,6 @@ function makeModelOptions(tileset, tile, content, additionalOptions) {
     enableDebugWireframe: tileset._enableDebugWireframe,
     debugWireframe: tileset.debugWireframe,
     projectTo2D: tileset._projectTo2D,
-    enableShowOutline: tileset._enableShowOutline,
-    showOutline: tileset.showOutline,
-    outlineColor: tileset.outlineColor,
   };
 
   return combine(additionalOptions, mainOptions);

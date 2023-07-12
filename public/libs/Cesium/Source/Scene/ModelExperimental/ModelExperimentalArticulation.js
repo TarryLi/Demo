@@ -110,7 +110,7 @@ Object.defineProperties(ModelExperimentalArticulation.prototype, {
    * The runtime nodes that are affected by this articulation.
    *
    * @memberof ModelExperimentalArticulation.prototype
-   * @type {ModelExperimentalRuntimeNode[]}
+   * @type {ModelExperimentalNode[]}
    * @readonly
    *
    * @private

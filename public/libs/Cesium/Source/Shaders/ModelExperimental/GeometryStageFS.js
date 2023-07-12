@@ -4,7 +4,7 @@ export default "void geometryStage(out ProcessedAttributes attributes)\n\
   attributes.positionMC = v_positionMC;\n\
   attributes.positionEC = v_positionEC;\n\
 \n\
-  #ifdef COMPUTE_POSITION_WC_CUSTOM_SHADER\n\
+  #ifdef COMPUTE_POSITION_WC\n\
   attributes.positionWC = v_positionWC;\n\
   #endif\n\
 \n\

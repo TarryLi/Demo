@@ -29,10 +29,6 @@ void main() \n\
     skinningStage(attributes);\n\
     #endif\n\
 \n\
-    #ifdef HAS_PRIMITIVE_OUTLINE\n\
-    primitiveOutlineStage();\n\
-    #endif\n\
-\n\
     // Compute the bitangent according to the formula in the glTF spec.\n\
     // Normal and tangents can be affected by morphing and skinning, so\n\
     // the bitangent should not be computed until their values are finalized.\n\
@@ -46,7 +42,6 @@ void main() \n\
     #ifdef HAS_SELECTED_FEATURE_ID\n\
     SelectedFeature feature;\n\
     selectedFeatureIdStage(feature, featureIds);\n\
-    // Handle any show properties that come from the style.\n\
     cpuStylingStage(attributes.positionMC, feature);\n\
     #endif\n\
 \n\
@@ -63,6 +58,7 @@ void main() \n\
     mat4 modelView = czm_modelView;\n\
     mat3 normal = czm_normal;\n\
     #endif\n\
+    \n\
 \n\
     // Update the position for this instance in place\n\
     #ifdef HAS_INSTANCING\n\
@@ -90,44 +86,29 @@ void main() \n\
     #endif\n\
 \n\
     Metadata metadata;\n\
-    MetadataClass metadataClass;\n\
-    metadataStage(metadata, metadataClass, attributes);\n\
+    metadataStage(metadata, attributes);\n\
 \n\
     #ifdef HAS_CUSTOM_VERTEX_SHADER\n\
     czm_modelVertexOutput vsOutput = defaultVertexOutput(attributes.positionMC);\n\
-    customShaderStage(vsOutput, attributes, featureIds, metadata, metadataClass);\n\
+    customShaderStage(vsOutput, attributes, featureIds, metadata);\n\
     #endif\n\
 \n\
     // Compute the final position in each coordinate system needed.\n\
-    // This returns the value that will be assigned to gl_Position.\n\
-    vec4 positionClip = geometryStage(attributes, modelView, normal);    \n\
+    // This also sets gl_Position.\n\
+    geometryStage(attributes, modelView, normal);    \n\
 \n\
     #ifdef HAS_SILHOUETTE\n\
-    silhouetteStage(attributes, positionClip);\n\
-    #endif\n\
-\n\
-    #ifdef HAS_POINT_CLOUD_SHOW_STYLE\n\
-    float show = pointCloudShowStylingStage(attributes, metadata);\n\
-    #else\n\
-    float show = 1.0;\n\
-    #endif\n\
-\n\
-    #ifdef HAS_POINT_CLOUD_COLOR_STYLE\n\
-    v_pointCloudColor = pointCloudColorStylingStage(attributes, metadata);\n\
+    silhouetteStage(attributes);\n\
     #endif\n\
 \n\
     #ifdef PRIMITIVE_TYPE_POINTS\n\
         #ifdef HAS_CUSTOM_VERTEX_SHADER\n\
         gl_PointSize = vsOutput.pointSize;\n\
-        #elif defined(HAS_POINT_CLOUD_POINT_SIZE_STYLE) || defined(HAS_POINT_CLOUD_ATTENUATION)\n\
-        gl_PointSize = pointCloudPointSizeStylingStage(attributes, metadata);\n\
+        #elif defined(USE_POINT_CLOUD_ATTENUATION)\n\
+        gl_PointSize = pointCloudAttenuationStage(v_positionEC);\n\
         #else\n\
         gl_PointSize = 1.0;\n\
         #endif\n\
-\n\
-        gl_PointSize *= show;\n\
     #endif\n\
-\n\
-    gl_Position = show * positionClip;\n\
 }\n\
 ";

@@ -1,5 +1,6 @@
 import buildModuleUrl from "./buildModuleUrl.js";
 import defaultValue from "./defaultValue.js";
+import defer from "./defer.js";
 import defined from "./defined.js";
 import Iau2006XysSample from "./Iau2006XysSample.js";
 import JulianDate from "./JulianDate.js";
@@ -245,6 +246,10 @@ function requestXysChunk(xysData, chunkIndex) {
     return xysData._chunkDownloadsInProgress[chunkIndex];
   }
 
+  const deferred = defer();
+
+  xysData._chunkDownloadsInProgress[chunkIndex] = deferred;
+
   let chunkUrl;
   const xysFileUrlTemplate = xysData._xysFileUrlTemplate;
   if (defined(xysFileUrlTemplate)) {
@@ -259,7 +264,7 @@ function requestXysChunk(xysData, chunkIndex) {
     });
   }
 
-  const promise = chunkUrl.fetchJson().then(function (chunk) {
+  chunkUrl.fetchJson().then(function (chunk) {
     xysData._chunkDownloadsInProgress[chunkIndex] = false;
 
     const samples = xysData._samples;
@@ -269,9 +274,10 @@ function requestXysChunk(xysData, chunkIndex) {
     for (let i = 0, len = newSamples.length; i < len; ++i) {
       samples[startIndex + i] = newSamples[i];
     }
-  });
-  xysData._chunkDownloadsInProgress[chunkIndex] = promise;
 
-  return promise;
+    deferred.resolve();
+  });
+
+  return deferred.promise;
 }
 export default Iau2006XysData;

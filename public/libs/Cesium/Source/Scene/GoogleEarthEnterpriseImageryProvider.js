@@ -229,7 +229,7 @@ function GoogleEarthEnterpriseImageryProvider(options) {
         const e = new RuntimeError(
           `The server ${metadata.url} doesn't have imagery`
         );
-        metadataError = TileProviderError.reportError(
+        metadataError = TileProviderError.handleError(
           metadataError,
           that,
           that._errorEvent,
@@ -242,12 +242,12 @@ function GoogleEarthEnterpriseImageryProvider(options) {
         return Promise.reject(e);
       }
 
-      TileProviderError.reportSuccess(metadataError);
+      TileProviderError.handleSuccess(metadataError);
       that._ready = result;
       return result;
     })
     .catch(function (e) {
-      metadataError = TileProviderError.reportError(
+      metadataError = TileProviderError.handleError(
         metadataError,
         that,
         that._errorEvent,

@@ -101,9 +101,7 @@ function getTextureAndMips(textureUniform, image, context) {
     ? getTextureFromTypedArray(textureUniform, context)
     : new Texture({ context, source: image, sampler });
 
-  if (samplerRequiresMipmap(sampler)) {
-    texture.generateMipmap();
-  }
+  if (samplerRequiresMipmap(sampler)) texture.generateMipmap();
 
   return texture;
 }

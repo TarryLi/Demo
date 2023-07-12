@@ -3,8 +3,7 @@ export default "void customShaderStage(\n\
     inout czm_modelMaterial material,\n\
     ProcessedAttributes attributes,\n\
     FeatureIds featureIds,\n\
-    Metadata metadata,\n\
-    MetadataClass metadataClass\n\
+    Metadata metadata\n\
 ) {\n\
     // FragmentInput and initializeInputStruct() are dynamically generated in JS, \n\
     // see CustomShaderPipelineStage.js\n\
@@ -12,7 +11,6 @@ export default "void customShaderStage(\n\
     initializeInputStruct(fsInput, attributes);\n\
     fsInput.featureIds = featureIds;\n\
     fsInput.metadata = metadata;\n\
-    fsInput.metadataClass = metadataClass;\n\
     fragmentMain(fsInput, material);\n\
 }\n\
 ";

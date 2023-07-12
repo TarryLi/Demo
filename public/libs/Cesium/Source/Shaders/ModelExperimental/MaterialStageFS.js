@@ -24,7 +24,7 @@ vec3 computeNormal(ProcessedAttributes attributes)\n\
     vec3 ng = attributes.normalEC;\n\
 \n\
     vec3 normal = ng;\n\
-    #if defined(HAS_NORMAL_TEXTURE) && !defined(HAS_WIREFRAME)\n\
+    #if defined(HAS_NORMAL_TEXTURE) && !defined(USE_WIREFRAME)\n\
     vec2 normalTexCoords = TEXCOORD_NORMAL;\n\
         #ifdef HAS_NORMAL_TEXTURE_TRANSFORM\n\
         normalTexCoords = computeTextureTransform(normalTexCoords, u_normalTextureTransform);\n\
@@ -51,12 +51,6 @@ vec3 computeNormal(ProcessedAttributes attributes)\n\
         vec3 n = texture2D(u_normalTexture, normalTexCoords).rgb;\n\
         normal = normalize(tbn * (2.0 * n - 1.0));\n\
         #endif\n\
-    #endif\n\
-\n\
-    #ifdef HAS_DOUBLE_SIDED_MATERIAL\n\
-    if (czm_backFacing()) {\n\
-        normal = -normal;\n\
-    }\n\
     #endif\n\
 \n\
     return normal;\n\
@@ -88,9 +82,7 @@ void materialStage(inout czm_modelMaterial material, ProcessedAttributes attribu
     baseColorWithAlpha = u_baseColorFactor;\n\
     #endif\n\
 \n\
-    #ifdef HAS_POINT_CLOUD_COLOR_STYLE\n\
-    baseColorWithAlpha = v_pointCloudColor;\n\
-    #elif defined(HAS_COLOR_0)\n\
+    #ifdef HAS_COLOR_0\n\
     vec4 color = attributes.color_0;\n\
         // .pnts files store colors in the sRGB color space\n\
         #ifdef HAS_SRGB_COLOR\n\

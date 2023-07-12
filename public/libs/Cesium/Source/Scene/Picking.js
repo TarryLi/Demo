@@ -6,6 +6,7 @@ import Cartographic from "../Core/Cartographic.js";
 import Check from "../Core/Check.js";
 import Color from "../Core/Color.js";
 import defaultValue from "../Core/defaultValue.js";
+import defer from "../Core/defer.js";
 import defined from "../Core/defined.js";
 import DeveloperError from "../Core/DeveloperError.js";
 import Matrix4 from "../Core/Matrix4.js";
@@ -605,12 +606,8 @@ function MostDetailedRayPick(ray, width, tilesets) {
   this.width = width;
   this.tilesets = tilesets;
   this.ready = false;
-  const pick = this;
-  this.promise = new Promise((resolve) => {
-    pick._completePick = () => {
-      resolve();
-    };
-  });
+  this.deferred = defer();
+  this.promise = this.deferred.promise;
 }
 
 function updateOffscreenCameraFromRay(picking, ray, width, camera) {
@@ -664,7 +661,7 @@ function updateMostDetailedRayPick(picking, scene, rayPick) {
   }
 
   if (ready) {
-    rayPick._completePick();
+    rayPick.deferred.resolve();
   }
 
   return ready;
@@ -887,19 +884,19 @@ function drillPickFromRay(
 function deferPromiseUntilPostRender(scene, promise) {
   // Resolve promise after scene's postRender in case entities are created when the promise resolves.
   // Entities can't be created between viewer._onTick and viewer._postRender.
-  return new Promise((resolve, reject) => {
-    promise
-      .then(function (result) {
-        const removeCallback = scene.postRender.addEventListener(function () {
-          removeCallback();
-          resolve(result);
-        });
-        scene.requestRender();
-      })
-      .catch(function (error) {
-        reject(error);
+  const deferred = defer();
+  promise
+    .then(function (result) {
+      const removeCallback = scene.postRender.addEventListener(function () {
+        deferred.resolve(result);
+        removeCallback();
       });
-  });
+      scene.requestRender();
+    })
+    .catch(function (error) {
+      deferred.reject(error);
+    });
+  return deferred.promise;
 }
 
 Picking.prototype.pickFromRay = function (scene, ray, objectsToExclude, width) {

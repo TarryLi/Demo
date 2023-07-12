@@ -2,6 +2,7 @@ import buildModuleUrl from "../Core/buildModuleUrl.js";
 import Check from "../Core/Check.js";
 import Credit from "../Core/Credit.js";
 import defaultValue from "../Core/defaultValue.js";
+import defer from "../Core/defer.js";
 import defined from "../Core/defined.js";
 import DeveloperError from "../Core/DeveloperError.js";
 import Event from "../Core/Event.js";
@@ -217,6 +218,8 @@ function GoogleEarthEnterpriseMapsProvider(options) {
   this._errorEvent = new Event();
 
   this._ready = false;
+  this._readyPromise = defer();
+
   const metadataResource = resource.getDerivedResource({
     url: "query",
     queryParameters: {
@@ -254,30 +257,32 @@ function GoogleEarthEnterpriseMapsProvider(options) {
 
     if (!defined(layer)) {
       message = `Could not find layer with channel (id) of ${that._channel}.`;
-      metadataError = TileProviderError.reportError(
+      metadataError = TileProviderError.handleError(
         metadataError,
         that,
         that._errorEvent,
-        message
+        message,
+        undefined,
+        undefined,
+        undefined,
+        requestMetadata
       );
-      if (metadataError.retry) {
-        return requestMetadata();
-      }
-      return Promise.reject(new RuntimeError(message));
+      throw new RuntimeError(message);
     }
 
     if (!defined(layer.version)) {
       message = `Could not find a version in channel (id) ${that._channel}.`;
-      metadataError = TileProviderError.reportError(
+      metadataError = TileProviderError.handleError(
         metadataError,
         that,
         that._errorEvent,
-        message
+        message,
+        undefined,
+        undefined,
+        undefined,
+        requestMetadata
       );
-      if (metadataError.retry) {
-        return requestMetadata();
-      }
-      return Promise.reject(new RuntimeError(message));
+      throw new RuntimeError(message);
     }
     that._version = layer.version;
 
@@ -297,21 +302,22 @@ function GoogleEarthEnterpriseMapsProvider(options) {
       });
     } else {
       message = `Unsupported projection ${data.projection}.`;
-      metadataError = TileProviderError.reportError(
+      metadataError = TileProviderError.handleError(
         metadataError,
         that,
         that._errorEvent,
-        message
+        message,
+        undefined,
+        undefined,
+        undefined,
+        requestMetadata
       );
-      if (metadataError.retry) {
-        return requestMetadata();
-      }
-      return Promise.reject(new RuntimeError(message));
+      throw new RuntimeError(message);
     }
 
     that._ready = true;
-    TileProviderError.reportSuccess(metadataError);
-    return Promise.resolve(true);
+    that._readyPromise.resolve(true);
+    TileProviderError.handleSuccess(metadataError);
   }
 
   function metadataFailure(e) {
@@ -319,23 +325,31 @@ function GoogleEarthEnterpriseMapsProvider(options) {
       e.message,
       `An error occurred while accessing ${metadataResource.url}.`
     );
-    metadataError = TileProviderError.reportError(
+    metadataError = TileProviderError.handleError(
       metadataError,
       that,
       that._errorEvent,
-      message
+      message,
+      undefined,
+      undefined,
+      undefined,
+      requestMetadata
     );
-    return Promise.reject(new RuntimeError(message));
+    that._readyPromise.reject(new RuntimeError(message));
   }
 
   function requestMetadata() {
-    return metadataResource
+    metadataResource
       .fetchText()
-      .then(metadataSuccess)
-      .catch(metadataFailure);
+      .then(function (text) {
+        metadataSuccess(text);
+      })
+      .catch(function (e) {
+        metadataFailure(e);
+      });
   }
 
-  this._readyPromise = requestMetadata();
+  requestMetadata();
 }
 
 Object.defineProperties(GoogleEarthEnterpriseMapsProvider.prototype, {
@@ -611,7 +625,7 @@ Object.defineProperties(GoogleEarthEnterpriseMapsProvider.prototype, {
    */
   readyPromise: {
     get: function () {
-      return this._readyPromise;
+      return this._readyPromise.promise;
     },
   },
 

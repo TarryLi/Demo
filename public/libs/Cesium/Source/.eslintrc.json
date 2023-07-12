@@ -1,7 +1,8 @@
 {
     "root": true,
     "extends": [
-        "cesium/browser"
+        "../Tools/eslint-config-cesium/browser.js",
+        "prettier"
     ],
     "plugins": [
         "html",

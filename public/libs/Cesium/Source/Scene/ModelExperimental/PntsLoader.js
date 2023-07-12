@@ -5,10 +5,8 @@ import Check from "../../Core/Check.js";
 import ComponentDatatype from "../../Core/ComponentDatatype.js";
 import defaultValue from "../../Core/defaultValue.js";
 import defined from "../../Core/defined.js";
-import DeveloperError from "../../Core/DeveloperError.js";
 import Matrix4 from "../../Core/Matrix4.js";
 import PrimitiveType from "../../Core/PrimitiveType.js";
-import WebGLConstants from "../../Core/WebGLConstants.js";
 import MersenneTwister from "../../ThirdParty/mersenne-twister.js";
 import Buffer from "../../Renderer/Buffer.js";
 import BufferUsage from "../../Renderer/BufferUsage.js";
@@ -19,8 +17,10 @@ import parseBatchTable from "../parseBatchTable.js";
 import DracoLoader from "../DracoLoader.js";
 import StructuralMetadata from "../StructuralMetadata.js";
 import ResourceLoader from "../ResourceLoader.js";
+import MetadataClass from "../MetadataClass.js";
 import ModelComponents from "../ModelComponents.js";
 import PntsParser from "../PntsParser.js";
+import PropertyTable from "../PropertyTable.js";
 import ResourceLoaderState from "../ResourceLoaderState.js";
 import VertexAttributeSemantic from "../VertexAttributeSemantic.js";
 
@@ -45,7 +45,6 @@ const MetallicRoughness = ModelComponents.MetallicRoughness;
  * @param {Object} options An object containing the following properties
  * @param {ArrayBuffer} options.arrayBuffer The array buffer of the pnts contents
  * @param {Number} [options.byteOffset] The byte offset to the beginning of the pnts contents in the array buffer
- * @param {Boolean} [options.loadAttributesFor2D=false] If true, load the positions buffer as a typed array for accurately projecting models to 2D.
  */
 export default function PntsLoader(options) {
   options = defaultValue(options, defaultValue.EMPTY_OBJECT);
@@ -59,7 +58,6 @@ export default function PntsLoader(options) {
 
   this._arrayBuffer = arrayBuffer;
   this._byteOffset = byteOffset;
-  this._loadAttributesFor2D = defaultValue(options.loadAttributesFor2D, false);
 
   this._parsedContent = undefined;
   this._decodePromise = undefined;
@@ -155,13 +153,8 @@ PntsLoader.prototype.load = function () {
   this._promise = new Promise(function (resolve, reject) {
     loader._process = function (frameState) {
       if (loader._state === ResourceLoaderState.PROCESSING) {
-        if (defined(loader._decodePromise)) {
-          return;
-        }
-
-        const decodePromise = decodeDraco(loader, frameState.context);
-        if (defined(decodePromise)) {
-          decodePromise.then(resolve).catch(reject);
+        if (!defined(loader._decodePromise)) {
+          decodeDraco(loader, frameState.context).then(resolve).catch(reject);
         }
       }
     };
@@ -206,7 +199,7 @@ function decodeDraco(loader, context) {
     .catch(function (error) {
       loader.unload();
       loader._state = ResourceLoaderState.FAILED;
-      const errorMessage = "Failed to load Draco pnts";
+      const errorMessage = "Failed to load Draco";
       return Promise.reject(loader.getError(errorMessage, error));
     });
 }
@@ -308,79 +301,21 @@ function processDracoAttributes(loader, draco, result) {
     };
   }
 
-  let batchTableJson = parsedContent.batchTableJson;
-
+  let styleableProperties = parsedContent.styleableProperties;
   const batchTableProperties = draco.batchTableProperties;
   for (const name in batchTableProperties) {
     if (batchTableProperties.hasOwnProperty(name)) {
       const property = result[name];
-
-      if (!defined(batchTableJson)) {
-        batchTableJson = {};
+      if (!defined(styleableProperties)) {
+        styleableProperties = {};
       }
-
-      parsedContent.hasDracoBatchTable = true;
-
-      const data = property.data;
-      batchTableJson[name] = {
-        byteOffset: data.byteOffset,
-        // Draco returns the results like glTF values, but here
-        // we want to transcode to a batch table. It's redundant
-        // but necessary to use parseBatchTable()
-        type: transcodeAttributeType(data.componentsPerAttribute),
-        componentType: transcodeComponentType(data.componentDatatype),
-        // Each property is stored as a separate typed array, so
-        // store it here. parseBatchTable() will check for this
-        // instead of the entire binary body.
+      styleableProperties[name] = {
         typedArray: property.array,
+        componentCount: property.data.componentsPerAttribute,
       };
     }
   }
-  parsedContent.batchTableJson = batchTableJson;
-}
-
-function transcodeAttributeType(componentsPerAttribute) {
-  switch (componentsPerAttribute) {
-    case 1:
-      return "SCALAR";
-    case 2:
-      return "VEC2";
-    case 3:
-      return "VEC3";
-    case 4:
-      return "VEC4";
-    //>>includeStart('debug', pragmas.debug);
-    default:
-      throw new DeveloperError(
-        "componentsPerAttribute must be a number from 1-4"
-      );
-    //>>includeEnd('debug');
-  }
-}
-
-function transcodeComponentType(value) {
-  switch (value) {
-    case WebGLConstants.BYTE:
-      return "BYTE";
-    case WebGLConstants.UNSIGNED_BYTE:
-      return "UNSIGNED_BYTE";
-    case WebGLConstants.SHORT:
-      return "SHORT";
-    case WebGLConstants.UNSIGNED_SHORT:
-      return "UNSIGNED_SHORT";
-    case WebGLConstants.INT:
-      return "INT";
-    case WebGLConstants.UNSIGNED_INT:
-      return "UNSIGNED_INT";
-    case WebGLConstants.DOUBLE:
-      return "DOUBLE";
-    case WebGLConstants.FLOAT:
-      return "FLOAT";
-    //>>includeStart('debug', pragmas.debug);
-    default:
-      throw new DeveloperError("value is not a valid WebGL constant");
-    //>>includeEnd('debug');
-  }
+  parsedContent.styleableProperties = styleableProperties;
 }
 
 function makeAttribute(loader, attributeInfo, context) {
@@ -439,14 +374,6 @@ function makeAttribute(loader, attributeInfo, context) {
     buffer.vertexArrayDestroyable = false;
     loader._buffers.push(buffer);
     attribute.buffer = buffer;
-  }
-
-  const loadAttributesFor2D = loader._loadAttributesFor2D;
-  if (
-    attribute.semantic === VertexAttributeSemantic.POSITION &&
-    loadAttributesFor2D
-  ) {
-    attribute.typedArray = typedArray;
   }
 
   return attribute;
@@ -548,29 +475,28 @@ function makeAttributes(loader, parsedContent, context) {
   return attributes;
 }
 
-function makeStructuralMetadata(parsedContent, customAttributeOutput) {
+function makeStructuralMetadata(parsedContent) {
   const batchLength = parsedContent.batchLength;
   const pointsLength = parsedContent.pointsLength;
   const batchTableBinary = parsedContent.batchTableBinary;
 
-  // If there are batch IDs, parse as a property table. Otherwise, parse
-  // as property attributes.
-  const parseAsPropertyAttributes = !defined(parsedContent.batchIds);
-
-  if (defined(batchTableBinary) || parsedContent.hasDracoBatchTable) {
+  if (defined(batchTableBinary)) {
     const count = defaultValue(batchLength, pointsLength);
     return parseBatchTable({
       count: count,
       batchTable: parsedContent.batchTableJson,
       binaryBody: batchTableBinary,
-      parseAsPropertyAttributes: parseAsPropertyAttributes,
-      customAttributeOutput: customAttributeOutput,
     });
   }
 
+  // If batch table is not defined, create a property table without any properties.
+  const emptyPropertyTable = new PropertyTable({
+    name: MetadataClass.BATCH_TABLE_CLASS_NAME,
+    count: pointsLength,
+  });
   return new StructuralMetadata({
     schema: {},
-    propertyTables: [],
+    propertyTables: [emptyPropertyTable],
   });
 }
 
@@ -619,28 +545,7 @@ function makeComponents(loader, context) {
   const components = new Components();
   components.scene = scene;
   components.nodes = [node];
-
-  // Per-point features will be parsed as property attributes and handled on
-  // the GPU since CPU styling would be too expensive. However, if batch IDs
-  // exist, features will be parsed as a property table.
-  //
-  // Property attributes refer to a custom attribute that will
-  // store the values; such attributes will be populated in this array
-  // as needed.
-  const customAttributeOutput = [];
-  components.structuralMetadata = makeStructuralMetadata(
-    parsedContent,
-    customAttributeOutput
-  );
-
-  if (customAttributeOutput.length > 0) {
-    addPropertyAttributesToPrimitive(
-      loader,
-      primitive,
-      customAttributeOutput,
-      context
-    );
-  }
+  components.structuralMetadata = makeStructuralMetadata(parsedContent);
 
   if (defined(parsedContent.rtcCenter)) {
     components.transform = Matrix4.multiplyByTranslation(
@@ -665,37 +570,6 @@ function makeComponents(loader, context) {
 
   // Free the parsed content so we don't hold onto the large typed arrays.
   loader._parsedContent = undefined;
-}
-
-function addPropertyAttributesToPrimitive(
-  loader,
-  primitive,
-  customAttributes,
-  context
-) {
-  const attributes = primitive.attributes;
-
-  const length = customAttributes.length;
-  for (let i = 0; i < length; i++) {
-    const customAttribute = customAttributes[i];
-
-    // Upload the typed array to the GPU and free the CPU copy.
-    const buffer = Buffer.createVertexBuffer({
-      typedArray: customAttribute.typedArray,
-      context: context,
-      usage: BufferUsage.STATIC_DRAW,
-    });
-    buffer.vertexArrayDestroyable = false;
-    loader._buffers.push(buffer);
-    customAttribute.buffer = buffer;
-    customAttribute.typedArray = undefined;
-
-    attributes.push(customAttribute);
-  }
-
-  // The batch table is always transcoded as a single property attribute, so
-  // it will always be index 0
-  primitive.propertyAttributeIds = [0];
 }
 
 PntsLoader.prototype.unload = function () {

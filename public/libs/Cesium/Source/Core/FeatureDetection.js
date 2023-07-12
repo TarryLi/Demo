@@ -1,4 +1,5 @@
 import defaultValue from "./defaultValue.js";
+import defer from "./defer.js";
 import defined from "./defined.js";
 import DeveloperError from "./DeveloperError.js";
 import Fullscreen from "./Fullscreen.js";
@@ -235,22 +236,31 @@ supportsWebP.initialize = function () {
     return supportsWebP._promise;
   }
 
-  supportsWebP._promise = new Promise((resolve) => {
-    const image = new Image();
-    image.onload = function () {
-      supportsWebP._result = image.width > 0 && image.height > 0;
-      resolve(supportsWebP._result);
-    };
+  const supportsWebPDeferred = defer();
+  supportsWebP._promise = supportsWebPDeferred.promise;
+  if (isEdge()) {
+    // Edge's WebP support with WebGL is incomplete.
+    // See bug report: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/19221241/
+    supportsWebP._result = false;
+    supportsWebPDeferred.resolve(supportsWebP._result);
+    return supportsWebPDeferred.promise;
+  }
 
-    image.onerror = function () {
-      supportsWebP._result = false;
-      resolve(supportsWebP._result);
-    };
-    image.src =
-      "data:image/webp;base64,UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEADsD+JaQAA3AAAAAA";
-  });
+  const image = new Image();
+  image.onload = function () {
+    supportsWebP._result = image.width > 0 && image.height > 0;
+    supportsWebPDeferred.resolve(supportsWebP._result);
+  };
 
-  return supportsWebP._promise;
+  image.onerror = function () {
+    supportsWebP._result = false;
+    supportsWebPDeferred.resolve(supportsWebP._result);
+  };
+
+  image.src =
+    "data:image/webp;base64,UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEADsD+JaQAA3AAAAAA";
+
+  return supportsWebPDeferred.promise;
 };
 Object.defineProperties(supportsWebP, {
   initialized: {
