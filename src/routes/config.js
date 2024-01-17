@@ -2,6 +2,31 @@
 /* eslint-disable no-unused-vars */
 export default [
   {
+    path: '/threeBloom',
+    name: 'threeBloom',
+    component: () => import('@/pages/threeBloom')
+  },
+  {
+    path: '/threejs',
+    name: 'threejs',
+    component: () => import('@/pages/threejs')
+  },
+  {
+    path: '/line-3d',
+    name: 'line-3d',
+    component: () => import('@/pages/line-3d')
+  },
+  {
+    path: '/highcharts',
+    name: 'highcharts',
+    component: () => import('@/pages/highcharts')
+  },
+  {
+    path: '/3d-pi',
+    name: '3d饼状图',
+    component: () => import('@/pages/3d-pi')
+  },  
+  {
     path: '/cesium',
     name: 'cesium地图',
     component: () => import('@/pages/cesium')
